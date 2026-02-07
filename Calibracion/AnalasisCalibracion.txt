@@ -1,0 +1,4 @@
+Campo frontal válido:  −30° ≤ θ ≤ +30°
+Campo extendido:       −45° ≤ θ ≤ +45° (baja confianza)
+Fuera de campo:        ignorado
+
