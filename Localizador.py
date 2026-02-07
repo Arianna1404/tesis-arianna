@@ -49,7 +49,7 @@ MIN_CONFIDENCE = 0.05
 THETA_FIXED = 90.0  # grados
 
 # ============================================
-# 🔥 PARÁMETROS DE PESO DINÁMICO w = w_max · C · F
+#  PARÁMETROS DE PESO DINÁMICO w = w_max · C · F
 # ============================================
 
 W_MAX = 0.4           # Peso máximo del grafo (0.4 - 0.6)
@@ -72,10 +72,10 @@ doa_history = {
     'confidence': [], 
     'score': [], 
     'cost': [], 
-    'weight': [],           # 🔥 NUEVO: guardar w
-    'phi_music': [],        # 🔥 NUEVO: guardar φ_MUSIC
-    'phi_graph': [],        # 🔥 NUEVO: guardar φ_GRAFO
-    'factor_F': []          # 🔥 NUEVO: guardar factor frontal F
+    'weight': [],           # w
+    'phi_music': [],        # φ_MUSIC
+    'phi_graph': [],        # φ_GRAFO
+    'factor_F': []          # factor frontal F
 }
 R_history = []
 phi_prev = None
@@ -113,7 +113,7 @@ def unwrap_to_reference(phi, phi_ref):
     return min(options, key=lambda x: abs(x - phi_ref))
 
 # ============================================
-# 🔥 CÁLCULO DE PESO DINÁMICO w = w_max · C · F
+#  CÁLCULO DE PESO DINÁMICO w = w_max · C · F
 # ============================================
 
 def compute_dynamic_weight(confidence, phi_music):
@@ -302,7 +302,7 @@ def optimized_music_phi_only(R, theta_fixed=90.0, fs=16000):
     return phi_estimated, confidence
 
 # ============================================
-# 🔥 FILTRO DE GRAFO (DEVUELVE φ_GRAFO EXPLÍCITO)
+#  FILTRO DE GRAFO (DEVUELVE φ_GRAFO EXPLÍCITO)
 # ============================================
 
 def compute_graph_estimate(phi_raw, confidence):
@@ -368,7 +368,7 @@ def compute_graph_estimate(phi_raw, confidence):
     return phi_avg_circular, coherence_score
 
 # ============================================
-# 🔥 PROCESAMIENTO PRINCIPAL CON PESO DINÁMICO
+# PROCESAMIENTO PRINCIPAL CON PESO DINÁMICO
 # ============================================
 
 def localize_source_optimized(mic1, mic2, mic3, mic4, fs):
@@ -391,7 +391,7 @@ def localize_source_optimized(mic1, mic2, mic3, mic4, fs):
     R = np.mean(R_history, axis=0)
 
     # ============================================
-    # 1️⃣ ESTIMACIÓN MUSIC → φ_MUSIC
+    #  ESTIMACIÓN MUSIC → φ_MUSIC
     # ============================================
     phi_raw, conf = optimized_music_phi_only(R, theta_fixed=THETA_FIXED, fs=fs)
 
@@ -419,7 +419,7 @@ def localize_source_optimized(mic1, mic2, mic3, mic4, fs):
     phi_unwrapped = unwrap_to_reference(phi_selected, phi_prev)
 
     # ============================================
-    # 2️⃣ ESTIMACIÓN GRAFO → φ_GRAFO
+    # ESTIMACIÓN GRAFO → φ_GRAFO
     # ============================================
     phi_graph, coherence_score = compute_graph_estimate(
         phi_unwrapped,
@@ -427,12 +427,12 @@ def localize_source_optimized(mic1, mic2, mic3, mic4, fs):
     )
 
     # ============================================
-    # 3️⃣ CALCULAR PESO DINÁMICO w = w_max · C · F
+    # CALCULAR PESO DINÁMICO w = w_max · C · F
     # ============================================
     w, F = compute_dynamic_weight(conf, phi_unwrapped)
 
     # ============================================
-    # 4️⃣ COMBINAR CON PESO DINÁMICO
+    # COMBINAR CON PESO DINÁMICO
     # φ_final = (1 - w) · φ_MUSIC + w · φ_GRAFO
     # ============================================
     
@@ -445,7 +445,7 @@ def localize_source_optimized(mic1, mic2, mic3, mic4, fs):
     phi_final = np.rad2deg(np.angle(phi_combined_complex))
 
     # ============================================
-    # 5️⃣ ACTUALIZAR ESTADOS
+    # ACTUALIZAR ESTADOS
     # ============================================
     prev_phi = phi_selected
     phi_prev = phi_final
@@ -453,21 +453,21 @@ def localize_source_optimized(mic1, mic2, mic3, mic4, fs):
     estimated_doa = wrap_angle(phi_final)
 
     # ============================================
-    # 6️⃣ GUARDAR EN HISTORIAL (CON NUEVOS CAMPOS)
+    # GUARDAR EN HISTORIAL (CON NUEVOS CAMPOS)
     # ============================================
     doa_history['phi'].append(phi_final)
     doa_history['confidence'].append(conf)
     doa_history['score'].append(coherence_score)
     doa_history['cost'].append(cost)
-    doa_history['weight'].append(w)              # 🔥 NUEVO
-    doa_history['phi_music'].append(phi_unwrapped)  # 🔥 NUEVO
-    doa_history['phi_graph'].append(phi_graph)      # 🔥 NUEVO
-    doa_history['factor_F'].append(F)               # 🔥 NUEVO
+    doa_history['weight'].append(w)
+    doa_history['phi_music'].append(phi_unwrapped)
+    doa_history['phi_graph'].append(phi_graph)
+    doa_history['factor_F'].append(F)
 
     return estimated_doa, conf, coherence_score, cost
 
 # ============================================
-# 🔥 VISUALIZACIÓN MEJORADA
+# VISUALIZACIÓN MEJORADA
 # ============================================
 
 def visualizar_evolucion_phi(phis, confs, scores, costs, fs, hop_size, phi_real=None, 
@@ -482,7 +482,7 @@ def visualizar_evolucion_phi(phis, confs, scores, costs, fs, hop_size, phi_real=
     gs = GridSpec(5, 1, figure=fig, hspace=0.3)
 
     # ============================================
-    # 1️⃣ φ_final vs φ_MUSIC vs φ_GRAFO
+    #  φ_final vs φ_MUSIC vs φ_GRAFO
     # ============================================
     ax1 = fig.add_subplot(gs[0])
     ax1.plot(time_axis, phis_wrapped, 'b-', linewidth=2, label='φ_final (combinado)', alpha=0.8)
@@ -506,7 +506,7 @@ def visualizar_evolucion_phi(phis, confs, scores, costs, fs, hop_size, phi_real=
     ax1.set_xlim([time_axis[0], time_axis[-1]])
 
     # ============================================
-    # 2️⃣ Peso dinámico w(t)
+    # Peso dinámico w(t)
     # ============================================
     ax2 = fig.add_subplot(gs[1])
     if weights is not None:
@@ -521,7 +521,7 @@ def visualizar_evolucion_phi(phis, confs, scores, costs, fs, hop_size, phi_real=
     ax2.set_xlim([time_axis[0], time_axis[-1]])
 
     # ============================================
-    # 3️⃣ Factores C y F
+    # Factores C y F
     # ============================================
     ax3 = fig.add_subplot(gs[2])
     ax3.plot(time_axis, confs, 'orange', linewidth=2, label='C (confianza MUSIC)', alpha=0.8)
@@ -536,7 +536,7 @@ def visualizar_evolucion_phi(phis, confs, scores, costs, fs, hop_size, phi_real=
     ax3.set_xlim([time_axis[0], time_axis[-1]])
 
     # ============================================
-    # 4️⃣ Score de coherencia del grafo
+    # Score de coherencia del grafo
     # ============================================
     ax4 = fig.add_subplot(gs[3])
     ax4.plot(time_axis, scores, 'green', linewidth=2, alpha=0.7, label='Coherencia grafo')
@@ -549,7 +549,7 @@ def visualizar_evolucion_phi(phis, confs, scores, costs, fs, hop_size, phi_real=
     ax4.set_xlim([time_axis[0], time_axis[-1]])
 
     # ============================================
-    # 5️⃣ Costo de transición
+    # Costo de transición
     # ============================================
     ax5 = fig.add_subplot(gs[4])
     ax5.plot(time_axis, costs, 'red', linewidth=1.5, alpha=0.7, label='Costo transición')
