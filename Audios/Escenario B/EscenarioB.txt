@@ -1,0 +1,53 @@
+Escenario B — Ruido no estacionario (simulado)
+
+🏠 Sala
+    Dimensiones: 4 × 3 × 2.5 m
+    Materiales: paredes promedio (absorption ≈ 0.2)
+
+🎤 Fuente principal
+    Voz
+    Distancia: 1.2 m
+
+🔉 Ruido
+    noise_azimuth = 135° - Posición del ruido (ajustable)
+    noise_modulation_freq = 3.0 Hz - Velocidad de modulación
+    noise_modulation_depth = 0.7 - Intensidad de variación
+    noise_amplitude = 0.15 - Nivel relativo a la señal
+    noise_lowpass_freq = 3000 Hz - Límite espectral
+
+📌 Esto simula murmullo sin grabaciones reales.
+
+📌 Qué mides
+    estabilidad temporal
+    reacción del sistema (confianza y w)
+
+================================================================
+RESULTADOS
+================================================================
+
+φ_real | φ_medio  | Error   | Confianza | w_medio
+------------------------------------------------------------
+   -30° |   -18.8° |   +11.2° | 0.376     | 0.042
+   -25° |   -21.0° |    +4.0° | 0.367     | 0.037
+   -20° |   -27.0° |    -7.0° | 0.385     | 0.046
+   -15° |   -18.0° |    -3.0° | 0.494     | 0.117
+   -10° |    -3.8° |    +6.2° | 0.674     | 0.225
+    -5° |    +0.4° |    +5.4° | 0.722     | 0.250
+    +0° |    -0.0° |    -0.0° | 0.693     | 0.233
+    +5° |    -0.9° |    -5.9° | 0.622     | 0.194
+   +10° |   -16.6° |   -26.6° | 0.443     | 0.086
+   +15° |   -15.5° |   -30.5° | 0.358     | 0.036
+   +20° |   -14.2° |   -34.2° | 0.354     | 0.034
+   +25° |   -17.4° |   -42.4° | 0.356     | 0.037
+   +30° |   -17.5° |   -47.5° | 0.365     | 0.042
+
+======================================================================
+📈 ESTADÍSTICAS GLOBALES
+======================================================================
+Error absoluto medio: 17.2°
+Error máximo: 47.5°
+Error mínimo: 0.0°
+Desviación estándar: 16.0°
+
+✅ BUENO: Error medio <20°
+
